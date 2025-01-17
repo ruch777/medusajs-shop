@@ -70,20 +70,32 @@ export default async function seedDemoData({ container }: ExecArgs) {
     },
   });
   logger.info("Seeding region data...");
-  const { result: regionResult } = await createRegionsWorkflow(container).run({
-    input: {
-      regions: [
-        {
-          name: "Europe",
-          currency_code: "eur",
-          countries,
-          payment_providers: ["pp_system_default"],
-        },
-      ],
-    },
+  const existingRegions = await query.graph({
+    entity: "region",
+    fields: ["id", "name"],
+    filters: { name: "Europe" },
   });
-  const region = regionResult[0];
-  logger.info("Finished seeding regions.");
+
+  let region;
+  if (existingRegions.data.length === 0) {
+    const { result: regionResult } = await createRegionsWorkflow(container).run({
+      input: {
+        regions: [
+          {
+            name: "Europe",
+            currency_code: "eur",
+            countries,
+            payment_providers: ["pp_system_default"],
+          },
+        ],
+      },
+    });
+    region = regionResult[0];
+    logger.info("Finished seeding regions.");
+  } else {
+    region = existingRegions.data[0];
+    logger.info("Region 'Europe' already exists, skipping creation.");
+  }
 
   logger.info("Seeding tax regions...");
   await createTaxRegionsWorkflow(container).run({
