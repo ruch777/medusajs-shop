@@ -1,5 +1,7 @@
-import { Suspense } from "react"
+"use client"
+import { Suspense, useState } from "react"
 import { Menu } from "lucide-react"
+import CurrencyModal from "@modules/layout/components/currency-modal"
 
 import { listRegions } from "@lib/data/regions"
 import { getCollectionsList } from "@lib/data/collections"
@@ -73,9 +75,10 @@ export default async function Nav() {
     console.error("Failed to fetch regions:", err)
     error = true
   }
+  const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState(false);
 
   return (
-    <div className="sticky top-0 inset-x-0 z-50 group">
+    <div className="z-50 group">
       <TopNav />
       <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
         <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
@@ -119,18 +122,13 @@ export default async function Nav() {
 
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <div className="hidden small:flex items-center gap-x-6 h-full">
-              <div className="relative group">
-                <button className="flex items-center gap-1 hover:text-ui-fg-base">
+              <div className="relative">
+                <button onClick={() => setIsCurrencyModalOpen(true)} className="flex items-center gap-1 hover:text-ui-fg-base">
                   <span>USD</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
-                <div className="absolute hidden group-hover:block bg-white border border-ui-border-base rounded shadow-lg mt-1 p-2 min-w-[120px]">
-                  <button className="block w-full text-left px-2 py-1 hover:bg-ui-bg-subtle rounded">USD</button>
-                  <button className="block w-full text-left px-2 py-1 hover:bg-ui-bg-subtle rounded">EUR</button>
-                  <button className="block w-full text-left px-2 py-1 hover:bg-ui-bg-subtle rounded">GBP</button>
-                </div>
               </div>
               
               <LocalizedClientLink
@@ -158,6 +156,7 @@ export default async function Nav() {
           </div>
         </nav>
       </header>
+      <CurrencyModal isOpen={isCurrencyModalOpen} onClose={() => setIsCurrencyModalOpen(false)} />
     </div>
   )
 }
