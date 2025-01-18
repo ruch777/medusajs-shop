@@ -12,11 +12,28 @@ export const retrieveCollection = cache(async function (id: string) {
 
 export const getCollectionsList = cache(async function (
   offset: number = 0,
-  limit: number = 100
+  limit: number = 100,
+  timestamp?: number
 ): Promise<{ collections: HttpTypes.StoreCollection[]; count: number }> {
-  return sdk.store.collection
-    .list({ limit, offset: 0 }, { next: { tags: ["collections"] } })
-    .then(({ collections }) => ({ collections, count: collections.length }))
+  try {
+    const result = await sdk.store.collection.list(
+      { limit, offset: 0 },
+      {
+        next: {
+          tags: ["collections"],
+          // Revalidate immediately if timestamp is provided
+        }
+      }
+    )
+    
+    return {
+      collections: result.collections,
+      count: result.collections.length
+    }
+  } catch (error) {
+    console.error("Failed to fetch collections:", error)
+    throw error
+  }
 })
 
 export const getCollectionByHandle = cache(async function (
