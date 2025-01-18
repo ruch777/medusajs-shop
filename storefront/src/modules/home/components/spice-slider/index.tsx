@@ -1,5 +1,7 @@
 "use client"
 
+"use client"
+
 import { useState, useEffect } from "react"
 import { featuredSpices } from "@lib/data/spices"
 import SpiceSliderItem from "./spice-slider-item"
@@ -7,8 +9,10 @@ import SpiceSliderControls from "./spice-slider-controls"
 import ProductSearch from "@modules/common/components/product-search"
 import { Button } from "@components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import useMediaQuery from "@lib/hooks/use-media-query"
 
 export default function SpiceSlider() {
+  const isMobile = useMediaQuery("(max-width: 768px)")
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
@@ -53,9 +57,11 @@ export default function SpiceSlider() {
         ))}
       </div>
       
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-md mt-10">
-        <ProductSearch />
-      </div>
+      {!isMobile && (
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-md mt-20">
+          <ProductSearch />
+        </div>
+      )}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
         <div className="text-center">
         </div>

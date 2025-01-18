@@ -24,17 +24,17 @@ export default function SpiceSliderItem({ spice, isActive }: SpiceSliderItemProp
         priority={isActive}
       />
       <div className="absolute inset-0 bg-black/30 flex flex-col justify-end p-8">
-        <div className="flex flex-col items-center justify-center h-full mt-16 pb-16">
+        <div className="flex flex-col items-center justify-center h-full mt-16 pb-16 px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-2 text-center">
             {spice.name}
           </h2>
-          <p className="text-lg md:text-xl text-white max-w-[600px] text-center mb-4">
+          <p className="text-lg md:text-xl text-white max-w-[80%] text-center mb-4">
             {spice.description}
           </p>
-          <p className="text-lg md:text-xl text-white max-w-[600px] text-center mb-8">
+          <p className="text-lg md:text-xl text-white max-w-[80%] text-center mb-8">
             Authentic Ceylon Spices
           </p>
-          <Button variant="default" size="lg" className="bg-brand-secondary text-brand-primary">
+          <Button variant="default" size="lg" className="bg-brand-secondary text-brand-primary mt-8">
             Shop Now
           </Button>
         </div>
