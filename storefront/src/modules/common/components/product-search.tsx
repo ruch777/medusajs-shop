@@ -24,8 +24,8 @@ export default function ProductSearch({ onSelect }: ProductSearchProps) {
   }
 
   return (
-    <div className="relative mt-8">
-      <div className="flex items-center border rounded-md overflow-hidden">
+    <div className="relative mt-8 w-full">
+      <div className="flex items-center border w-full">
         <input
           type="text"
           placeholder="Search spices"
@@ -33,7 +33,7 @@ export default function ProductSearch({ onSelect }: ProductSearchProps) {
           value={query}
           onChange={handleSearch}
         />
-        <Button variant="secondary" size="sm">
+        <Button variant="secondary" size="sm" className="ml-auto">
           <Search className="h-4 w-4" />
           Search
         </Button>

@@ -28,10 +28,10 @@ export default function SpiceSliderItem({ spice, isActive }: SpiceSliderItemProp
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-2 text-center">
             {spice.name}
           </h2>
-          <p className="text-lg md:text-xl text-white max-w-[80%] text-center mb-4">
+          <p className="text-lg md:text-xl text-white text-center mb-4 whitespace-normal">
             {spice.description}
           </p>
-          <p className="text-lg md:text-xl text-white max-w-[80%] text-center mb-8">
+          <p className="text-lg md:text-xl text-white text-center mb-8 whitespace-normal">
             Authentic Ceylon Spices
           </p>
           <Button variant="default" size="lg" className="bg-brand-secondary text-brand-primary mt-8">
