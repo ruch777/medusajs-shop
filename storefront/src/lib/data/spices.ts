@@ -20,5 +20,15 @@ export const featuredSpices: Spice[] = [
     region: "International",
     rating: 4.8,
     isFeatured: true
+  },
+  {
+    id: "3",
+    name: "Cosmetic & Fragrance Collection",
+    description: "Discover our premium spices used in cosmetic and fragrance products",
+    image: "/images/spices/spice-collection-3.jpg",
+    price: 34.99,
+    region: "Global",
+    rating: 4.7,
+    isFeatured: true
   }
 ]

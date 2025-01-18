@@ -101,7 +101,7 @@ export default async function Nav() {
             )}
           </div>
 
-          <div className="flex items-center h-full">
+          <div className="flex items-center h-full pt-4">
             <LocalizedClientLink
               href="/"
               className="h-full flex items-center"
