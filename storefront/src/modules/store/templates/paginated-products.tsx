@@ -42,7 +42,7 @@ export default async function PaginatedProducts({
   }
 
   if (productsIds?.length) {
-    queryParams["id"] = productsIds
+    queryParams.id = productsIds
   }
 
   const region = await getRegion(countryCode)

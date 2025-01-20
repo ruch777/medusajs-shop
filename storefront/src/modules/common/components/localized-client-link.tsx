@@ -1,35 +1,27 @@
 "use client"
 
-import Link from "next/link"
+import Link, { LinkProps } from 'next/link'
+import React from 'react'
 import { useParams } from "next/navigation"
 import { PropsWithChildren } from "react"
 
-type LocalizedClientLinkProps = {
-  href: string
+interface LocalizedClientLinkProps extends LinkProps, PropsWithChildren {
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>
   className?: string
-  scroll?: boolean
-  "data-testid"?: string
-} & PropsWithChildren
+}
 
-export default function LocalizedClientLink({
-  href,
-  className,
-  scroll = true,
-  children,
-  ...props
-}: LocalizedClientLinkProps) {
+const LocalizedClientLink: React.FC<LocalizedClientLinkProps> = ({ children, onClick, ...props }) => {
   const { countryCode } = useParams()
 
-  const localizedHref = `/${countryCode}${href}`
+  const localizedHref = `/${countryCode}${props.href}`
 
   return (
-    <Link
-      href={localizedHref}
-      className={className}
-      scroll={scroll}
-      {...props}
-    >
-      {children}
+    <Link {...props} href={localizedHref}>
+      <span onClick={onClick} className={props.className} style={{ cursor: 'pointer' }}>
+        {children}
+      </span>
     </Link>
   )
 }
+
+export default LocalizedClientLink

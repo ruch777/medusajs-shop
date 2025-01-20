@@ -155,13 +155,10 @@ export async function enrichLineItems(
   if (!lineItems) return []
 
   // Prepare query parameters
-  const queryParams = {
-    ids: lineItems.map((lineItem) => lineItem.product_id!),
-    regionId: regionId,
-  }
+  const productIds = lineItems.map((lineItem) => lineItem.product_id!)
 
   // Fetch products by their IDs
-  const products = await getProductsById(queryParams)
+  const products = await getProductsById({ ids: productIds, regionId })
   // If there are no line items or products, return an empty array
   if (!lineItems?.length || !products) {
     return []

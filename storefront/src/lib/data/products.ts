@@ -28,8 +28,16 @@ export async function getProductsList({
   try {
     // Transform query params to handle IDs correctly
     const transformedParams = { ...queryParams }
+    
+    // Handle product IDs
     if (transformedParams.id?.ids) {
       transformedParams.id = transformedParams.id.ids
+    }
+    
+    // Handle region ID
+    if (transformedParams.id?.regionId) {
+      transformedParams.region_id = transformedParams.id.regionId
+      delete transformedParams.id.regionId
     }
 
     const { products, count } = await client.product.list({
@@ -109,10 +117,14 @@ export async function getFeaturedSpices(): Promise<Spice[]> {
   }
 }
 
-export async function getProductsById(ids: string[]): Promise<StoreProduct[]> {
+export async function getProductsById({ ids, regionId }: { ids: string[], regionId?: string }): Promise<StoreProduct[]> {
   try {
+    // Ensure ids is an array
+    const productIds = Array.isArray(ids) ? ids : [ids]
+    
     const { products } = await client.product.list({
-      id: ids,
+      id: productIds,
+      region_id: regionId
     })
     return products
   } catch (error) {
