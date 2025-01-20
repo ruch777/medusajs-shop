@@ -65,54 +65,52 @@ async function TopNav() {
 
 export default async function Nav() {
   let regions: StoreRegion[] = []
-  let error = false
   
   try {
     regions = await listRegions()
   } catch (err) {
     console.error("Failed to fetch regions:", err)
-    error = true
   }
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
-      <TopNav />
-      <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
-        <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
-          <div className="flex-1 basis-0 h-full flex items-center gap-4">
+      <header className="relative h-16 px-8 mx-auto border-b duration-200 bg-white border-ui-border-base">
+        <nav className="txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
+          <div className="flex-1 basis-0 h-full flex items-center">
             <div className="h-full">
               <SideMenu regions={regions} />
             </div>
             {process.env.NEXT_PUBLIC_FEATURE_SEARCH_ENABLED && (
-              <div className="hidden md:flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-full">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M14 14L11.1 11.1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+              <div className="hidden small:flex items-center gap-x-6 h-full">
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base text-sm"
+                  className="hover:text-ui-fg-base flex items-center gap-2"
                   href="/search"
                   scroll={false}
                   data-testid="nav-search-link"
                 >
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M14 14L11.1 11.1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
                   Search
                 </LocalizedClientLink>
               </div>
             )}
           </div>
 
-          <div className="flex items-center h-full pt-4">
+          <div className="flex items-center h-full">
             <LocalizedClientLink
               href="/"
-              className="h-full flex items-center"
+              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
               data-testid="nav-store-link"
             >
               <Image
                 src="/images/logo.png"
                 alt="Spice Store"
+                width={120}
+                height={40}
                 priority
-                layout="fill"
-                style={{ objectFit: 'contain' }}
+                className="h-auto"
               />
             </LocalizedClientLink>
           </div>
@@ -132,9 +130,8 @@ export default async function Nav() {
                   <button className="block w-full text-left px-2 py-1 hover:bg-ui-bg-subtle rounded">GBP</button>
                 </div>
               </div>
-              
               <LocalizedClientLink
-                className="flex items-center gap-1 hover:text-ui-fg-base"
+                className="hover:text-ui-fg-base flex items-center gap-2"
                 href="/account"
                 data-testid="nav-account-link"
               >
@@ -147,10 +144,13 @@ export default async function Nav() {
             </div>
             <Suspense
               fallback={
-                <div className="flex items-center gap-2 animate-pulse">
-                  <div className="w-6 h-6 bg-ui-bg-subtle rounded-full" />
-                  <span className="w-10 h-4 bg-ui-bg-subtle rounded" />
-                </div>
+                <LocalizedClientLink
+                  className="hover:text-ui-fg-base flex gap-2"
+                  href="/cart"
+                  data-testid="nav-cart-link"
+                >
+                  Cart (0)
+                </LocalizedClientLink>
               }
             >
               <CartButton />
