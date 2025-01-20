@@ -31,10 +31,14 @@ export async function getProductsList({
     
     // Handle product IDs
     if (transformedParams.id?.ids) {
-      transformedParams.id = transformedParams.id.ids
+      // Ensure ids is an array of strings
+      const ids = Array.isArray(transformedParams.id.ids) 
+        ? transformedParams.id.ids 
+        : [transformedParams.id.ids]
+      transformedParams.id = ids.filter((id: string | unknown): id is string => typeof id === 'string')
     }
-    
-    // Handle region ID
+
+    // Handle region ID separately
     if (transformedParams.id?.regionId) {
       transformedParams.region_id = transformedParams.id.regionId
       delete transformedParams.id.regionId
@@ -91,14 +95,23 @@ export async function getProductsListWithSort({
 }
 
 export async function getProductByHandle(
-  handle: string
+  handle: string,
+  regionId?: string
 ): Promise<{ product: StoreProduct }> {
   try {
-    const { product } = await client.product.retrieve(handle)
+    // First try to get the product by handle using list with handle filter
+    const { products } = await client.product.list({
+      handle: handle,
+      region_id: regionId
+    })
+
+    // Get the first product from the results
+    const product = products?.[0]
 
     if (!product) {
       throw new Error(`Product with handle ${handle} not found`)
     }
+
     return { product }
   } catch (error) {
     console.error('Error fetching product:', error)
@@ -119,9 +132,13 @@ export async function getFeaturedSpices(): Promise<Spice[]> {
 
 export async function getProductsById({ ids, regionId }: { ids: string[], regionId?: string }): Promise<StoreProduct[]> {
   try {
-    // Ensure ids is an array
-    const productIds = Array.isArray(ids) ? ids : [ids]
+    // Ensure ids is an array and filter out any non-string values
+    const productIds = (Array.isArray(ids) ? ids : [ids]).filter(id => typeof id === 'string')
     
+    if (productIds.length === 0) {
+      return []
+    }
+
     const { products } = await client.product.list({
       id: productIds,
       region_id: regionId
