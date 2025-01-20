@@ -21,7 +21,6 @@ export const getCollectionsList = cache(async function (
       {
         next: {
           tags: ["collections"],
-          // Revalidate immediately if timestamp is provided
         }
       }
     )
@@ -56,24 +55,26 @@ export const getCollectionsWithProducts = cache(
       .map((collection) => collection.id)
       .filter(Boolean) as string[]
 
-    const { products } = await getProductsList({
+    const { response } = await getProductsList({
       queryParams: { collection_id: collectionIds.join(",") },
       countryCode,
     })
 
-    products.forEach((product: ProductPreviewType) => {
-      const collection = collections.find(
-        (collection) => collection.id === product.collection_id
-      )
+    if (response.products) {
+      response.products.forEach((product: any) => {
+        const collection = collections.find(
+          (collection) => collection.id === product.collection_id
+        )
 
-      if (collection) {
-        if (!collection.products) {
-          collection.products = []
+        if (collection) {
+          if (!collection.products) {
+            collection.products = []
+          }
+
+          collection.products.push(product)
         }
-
-        collection.products.push(product as any)
-      }
-    })
+      })
+    }
 
     return collections as unknown as HttpTypes.StoreCollection[]
   }

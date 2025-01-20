@@ -59,18 +59,24 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                       </button>
                     </div>
                     <ul className="flex flex-col gap-6 items-start justify-start">
-                      {Object.entries(SideMenuItems).map(([name, href]) => (
-                        <li key={name}>
-                          <LocalizedClientLink
-                            href={href}
-                            className="text-3xl leading-10 text-white hover:text-ui-fg-disabled"
-                            onClick={close}
-                            data-testid={`${name.toLowerCase()}-link`}
-                          >
-                            {name}
-                          </LocalizedClientLink>
-                        </li>
-                      ))}
+                      {Object.entries(SideMenuItems).map(([name, href]) => {
+                        const isStore = name === "Store"
+                        return (
+                          <li key={name}>
+                            <LocalizedClientLink
+                              href={href}
+                              className="text-3xl leading-10 text-white hover:text-ui-fg-disabled"
+                              data-testid={isStore ? "store-link" : `${name.toLowerCase()}-link`}
+                              onClick={() => {
+                                close()
+                                closeMenu()
+                              }}
+                            >
+                              {name}
+                            </LocalizedClientLink>
+                          </li>
+                        )
+                      })}
                     </ul>
                     <div className="flex flex-col gap-y-6">
                       {regions && (

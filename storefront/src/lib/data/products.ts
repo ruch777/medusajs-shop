@@ -2,6 +2,8 @@ import { ProductType, ProductPreviewType, ProductListType } from "../types/produ
 import { transformProductPreview } from "../util/transform-product"
 import { client } from "../config"
 import { StoreProduct } from "@medusajs/types"
+import { sortProducts } from "../util/sort-products"
+import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 
 export interface Spice {
   id: string
@@ -20,29 +22,64 @@ export async function getProductsList({
   countryCode,
 }: {
   pageParam?: number
-  queryParams?: Record<string, string>
+  queryParams?: Record<string, any>
   countryCode: string
-}): Promise<ProductListType> {
+}): Promise<{ response: { products: StoreProduct[]; count: number } }> {
   try {
+    // Transform query params to handle IDs correctly
+    const transformedParams = { ...queryParams }
+    if (transformedParams.id?.ids) {
+      transformedParams.id = transformedParams.id.ids
+    }
+
     const { products, count } = await client.product.list({
       limit: 12,
       offset: pageParam * 12,
-      ...queryParams,
+      ...transformedParams,
     })
 
     return {
-      products: (products || []).map((product: StoreProduct) => 
-        transformProductPreview(product, countryCode)
-      ),
-      count: count || 0,
+      response: {
+        products: products || [],
+        count: count || 0,
+      }
     }
   } catch (error) {
     console.error('Error fetching products:', error)
     return {
-      products: [],
-      count: 0
+      response: {
+        products: [],
+        count: 0
+      }
     }
   }
+}
+
+export async function getProductsListWithSort({
+  page = 1,
+  queryParams,
+  sortBy,
+  countryCode,
+}: {
+  page?: number
+  queryParams?: Record<string, any>
+  sortBy?: SortOptions
+  countryCode: string
+}) {
+  const { response } = await getProductsList({
+    pageParam: page - 1,
+    queryParams: {
+      ...queryParams,
+      order: sortBy === "created_at" ? sortBy : undefined,
+    },
+    countryCode,
+  })
+
+  if (sortBy && sortBy !== "created_at") {
+    response.products = sortProducts(response.products, sortBy)
+  }
+
+  return { response }
 }
 
 export async function getProductByHandle(
