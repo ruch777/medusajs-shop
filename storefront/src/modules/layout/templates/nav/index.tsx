@@ -37,7 +37,7 @@ const TopNav = async () => {
   }
 
   return (
-    <div className="bg-[#c99859]">
+    <div className="bg-[#955220]">
       <div className="content-container mx-auto">
         <nav className="hidden md:flex items-center justify-between text-sm text-white">
           <div className="flex items-center gap-6">
@@ -76,8 +76,8 @@ const RegionsLoader = async () => {
 export default function Nav() {
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
-      <header className="relative h-16 px-8 mx-auto border-b duration-200 bg-white border-[#6a5d76]/10">
-        <nav className="txt-xsmall-plus text-[#6a5d76] flex items-center justify-between w-full h-full text-small-regular">
+      <header className="relative h-16 px-8 mx-auto border-b duration-200 bg-white border-[#c99859]/10">
+        <nav className="txt-xsmall-plus text-[#c99859] flex items-center justify-between w-full h-full text-small-regular">
           <div className="flex-1 basis-0 h-full flex items-center">
             <div className="h-full">
               <Suspense fallback={<div className="h-full" />}>
@@ -110,20 +110,20 @@ export default function Nav() {
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <div className="hidden small:flex items-center gap-x-6 h-full">
               <div className="relative group">
-                <button className="flex items-center gap-1 hover:text-[#f9b64b] text-[#6a5d76]">
+                <button className="flex items-center gap-1 hover:text-[#f9b64b] text-[#c99859]">
                   <span>USD</span>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
-                <div className="absolute hidden group-hover:block bg-white border border-[#6a5d76]/10 rounded shadow-lg mt-1 p-2 min-w-[120px]">
-                  <button className="block w-full text-left px-2 py-1 hover:bg-[#f9b64b]/10 text-[#6a5d76] rounded">USD</button>
-                  <button className="block w-full text-left px-2 py-1 hover:bg-[#f9b64b]/10 text-[#6a5d76] rounded">EUR</button>
-                  <button className="block w-full text-left px-2 py-1 hover:bg-[#f9b64b]/10 text-[#6a5d76] rounded">GBP</button>
+                <div className="absolute hidden group-hover:block bg-white border border-[#c99859]/10 rounded shadow-lg mt-1 p-2 min-w-[120px]">
+                  <button className="block w-full text-left px-2 py-1 hover:bg-[#f9b64b]/10 text-[#c99859] rounded">USD</button>
+                  <button className="block w-full text-left px-2 py-1 hover:bg-[#f9b64b]/10 text-[#c99859] rounded">EUR</button>
+                  <button className="block w-full text-left px-2 py-1 hover:bg-[#f9b64b]/10 text-[#c99859] rounded">GBP</button>
                 </div>
               </div>
               <LocalizedClientLink
-                className="hover:text-[#f9b64b] flex items-center gap-2 text-[#6a5d76]"
+                className="hover:text-[#f9b64b] flex items-center gap-2 text-[#c99859]"
                 href="/account"
                 data-testid="nav-account-link"
               >
@@ -137,7 +137,7 @@ export default function Nav() {
             <Suspense
               fallback={
                 <LocalizedClientLink
-                  className="hover:text-[#f9b64b] flex gap-2 text-[#6a5d76]"
+                  className="hover:text-[#f9b64b] flex gap-2 text-[#c99859]"
                   href="/cart"
                   data-testid="nav-cart-link"
                 >

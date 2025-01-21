@@ -62,6 +62,9 @@ importers:
       medusajs-launch-utils:
         specifier: ^0.0.10
         version: 0.0.10
+      meilisearch:
+        specifier: ^0.37.0
+        version: 0.37.0
       next:
         specifier: ^14.0.0
         version: 14.2.21(@babel/core@7.26.0)(@playwright/test@1.49.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2698,6 +2701,9 @@ packages:
 
   meilisearch@0.25.1:
     resolution: {integrity: sha512-20jO0pK9BhghxHSkOLbdoYn58h/Z0PNL3JQcRq7ipNIeqrxkAetCZZ6ttJC3uxcz0jVglmiFoSXu3Z/lEOLOLQ==}
+
+  meilisearch@0.37.0:
+    resolution: {integrity: sha512-LdbK6JmRghCawrmWKJSEQF0OiE82md+YqJGE/U2JcCD8ROwlhTx0KM6NX4rQt0u0VpV0QZVG9umYiu3CSSIJAQ==}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -6949,6 +6955,12 @@ snapshots:
       - pg-native
 
   meilisearch@0.25.1:
+    dependencies:
+      cross-fetch: 3.1.8
+    transitivePeerDependencies:
+      - encoding
+
+  meilisearch@0.37.0:
     dependencies:
       cross-fetch: 3.1.8
     transitivePeerDependencies:
