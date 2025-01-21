@@ -129,19 +129,57 @@ const medusaConfig = {
       },
     }] : []),
     ...(MEILISEARCH_HOST && MEILISEARCH_API_KEY ? [{
-      resolve: '@rokmohar/medusa-plugin-meilisearch',
+      resolve: `medusa-plugin-meilisearch`,
       options: {
         config: {
           host: MEILISEARCH_HOST,
-          apiKey: MEILISEARCH_API_KEY
+          apiKey: MEILISEARCH_API_KEY,
         },
         settings: {
           products: {
             indexSettings: {
-              searchableAttributes: ['title', 'description', 'variant_sku'],
-              displayedAttributes: ['title', 'description', 'variant_sku', 'thumbnail', 'handle']
+              searchableAttributes: [
+                "title",
+                "description",
+                "variant_sku",
+                "handle"
+              ],
+              displayedAttributes: [
+                "title",
+                "description",
+                "variant_sku",
+                "thumbnail",
+                "handle",
+                "id",
+                "collection_id",
+                "collection",
+                "variants",
+                "options",
+                "images",
+                "weight",
+                "height",
+                "length",
+                "width"
+              ],
             },
-            primaryKey: 'id'
+            primaryKey: "id",
+            transform: (product) => ({
+              id: product.id,
+              title: product.title,
+              description: product.description,
+              handle: product.handle,
+              thumbnail: product.thumbnail,
+              variant_sku: product.variants?.map((v) => v.sku).filter(Boolean),
+              collection_id: product.collection_id,
+              collection: product.collection,
+              variants: product.variants,
+              options: product.options,
+              images: product.images,
+              weight: product.weight,
+              height: product.height,
+              length: product.length,
+              width: product.width
+            })
           }
         }
       }

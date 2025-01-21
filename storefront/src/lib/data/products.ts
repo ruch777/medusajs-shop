@@ -1,9 +1,11 @@
 import { ProductType, ProductPreviewType, ProductListType } from "../types/product"
 import { transformProductPreview } from "../util/transform-product"
 import { client } from "../config"
+import { searchClientInstance } from "../search-client"
 import { StoreProduct } from "@medusajs/types"
 import { sortProducts } from "../util/sort-products"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { SearchResponse } from "meilisearch"
 
 export interface Spice {
   id: string
@@ -94,18 +96,57 @@ export async function getProductsListWithSort({
   return { response }
 }
 
+export async function searchProducts(
+  query: string,
+  limit: number = 12,
+  offset: number = 0
+): Promise<{ products: StoreProduct[]; count: number }> {
+  try {
+    const response = await searchClientInstance.search<StoreProduct>(query, {
+      limit,
+      offset,
+    })
+
+    return {
+      products: response.hits,
+      count: response.estimatedTotalHits || 0,
+    }
+  } catch (error) {
+    console.error('Error searching products:', error)
+    return {
+      products: [],
+      count: 0,
+    }
+  }
+}
+
 export async function getProductByHandle(
   handle: string,
   regionId?: string
 ): Promise<{ product: StoreProduct }> {
   try {
-    // First try to get the product by handle using list with handle filter
+    // First try to search for the product by handle using MeiliSearch
+    const searchResult = await searchClientInstance.getByHandle<StoreProduct>(handle)
+
+    if (searchResult) {
+      // Get the complete product data using the ID from search result
+      const { product } = await client.product.retrieve(searchResult.id, {
+        region_id: regionId
+      })
+
+      if (!product) {
+        throw new Error(`Product with handle ${handle} not found`)
+      }
+
+      return { product }
+    }
+
+    // Fallback to list API if search doesn't find the product
     const { products } = await client.product.list({
       handle: handle,
       region_id: regionId
     })
 
-    // Get the first product from the results
     const product = products?.[0]
 
     if (!product) {
