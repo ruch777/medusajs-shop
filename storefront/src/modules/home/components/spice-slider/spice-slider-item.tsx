@@ -3,6 +3,7 @@
 import { Spice } from "@lib/data/products"
 import Image from "next/image"
 import { Button } from "@components/ui/button"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 interface SpiceSliderItemProps {
   spice: Spice
@@ -34,9 +35,11 @@ export default function SpiceSliderItem({ spice, isActive }: SpiceSliderItemProp
           <p className="text-lg md:text-xl text-white text-center mb-8 whitespace-normal">
             Authentic Ceylon Spices
           </p>
-          <Button variant="default" size="lg" className="bg-brand-secondary text-brand-primary mt-8">
-            Shop Now
-          </Button>
+          <LocalizedClientLink href="/store">
+            <Button variant="default" size="lg" className="bg-brand-secondary text-brand-primary mt-8">
+              Shop Now
+            </Button>
+          </LocalizedClientLink>
         </div>
       </div>
     </div>
