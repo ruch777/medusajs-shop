@@ -1,16 +1,34 @@
-import Medusa from "@medusajs/js-sdk"
+import Medusa from "@medusajs/medusa-js"
+import { QueryClient } from "@tanstack/react-query"
+
+// Initialize the query client
+export const queryClient = new QueryClient()
 
 const MEDUSA_BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
-const MEDUSA_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 
-if (!MEDUSA_PUBLISHABLE_KEY) {
-  throw new Error("Missing NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY environment variable")
-}
+let _sdk: Medusa | null = null
+let _publishableApiKey: string | null = null
 
-export const sdk = new Medusa({
-  baseUrl: MEDUSA_BACKEND_URL,
-  debug: process.env.NODE_ENV === "development",
-  publishableKey: MEDUSA_PUBLISHABLE_KEY,
-})
+export async function getSDK(): Promise<Medusa> {
+  if (!_sdk || !_publishableApiKey) {
+    try {
+      const response = await fetch(`${MEDUSA_BACKEND_URL}/store/publishable-api-keys`)
+      const { publishable_api_keys } = await response.json()
+      _publishableApiKey = publishable_api_keys[0]?.id
 
-export const client = sdk.store 
+      if (!_publishableApiKey) {
+        throw new Error("No publishable API key found")
+      }
+
+      _sdk = new Medusa({
+        baseUrl: MEDUSA_BACKEND_URL,
+        maxRetries: 3,
+        publishableApiKey: _publishableApiKey
+      })
+    } catch (error) {
+      console.error('Failed to initialize Medusa client:', error)
+      throw error
+    }
+  }
+  return _sdk
+} 

@@ -8,7 +8,7 @@ type ConvertToLocaleParams = {
   locale?: string
 }
 
-export const convertToLocale = ({
+export const formatAmount = ({
   amount,
   currency_code,
   minimumFractionDigits,

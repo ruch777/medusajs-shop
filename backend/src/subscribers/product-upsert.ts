@@ -2,7 +2,7 @@ import type { SubscriberArgs, SubscriberConfig } from '@medusajs/framework';
 import { IProductModuleService } from '@medusajs/framework/types';
 import { Modules } from '@medusajs/framework/utils';
 import { ProductEvents, SearchUtils } from '@medusajs/framework/utils';
-import { MeiliSearchService } from '@rokmohar/medusa-plugin-meilisearch';
+import { MeiliSearchService } from '@rokmohar/medusa-plugin-meilisearch'
 
 export default async function productUpsertHandler({ event: { data }, container }: SubscriberArgs<{ id: string }>) {
   const productId = data.id;

@@ -81,7 +81,6 @@ export default function Nav() {
           <div className="flex-1 basis-0 h-full flex items-center">
             <div className="h-full">
               <Suspense fallback={<div className="h-full" />}>
-                {/* @ts-expect-error Server Component */}
                 <RegionsLoader />
               </Suspense>
             </div>
@@ -145,14 +144,12 @@ export default function Nav() {
                 </LocalizedClientLink>
               }
             >
-              {/* @ts-expect-error Server Component */}
               <CartButton />
             </Suspense>
           </div>
         </nav>
       </header>
       <Suspense fallback={null}>
-        {/* @ts-expect-error Server Component */}
         <TopNav />
       </Suspense>
     </div>

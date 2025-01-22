@@ -1,38 +1,29 @@
-export interface Product {
-  id: string
-  title: string
-  handle: string
-  thumbnail: string
-}
+import {
+  ProductDTO,
+  ProductVariantDTO,
+} from "@medusajs/types/dist/product/common"
+import { MoneyAmountDTO } from "@medusajs/types/dist/pricing/common/money-amount"
 
-export interface ProductType {
-  id: string
-  title: string
-  handle: string
-  thumbnail: string
-  description: string
-  price: number
+export type Product = Omit<ProductDTO, "variants" | "options" | "images" | "collection" | "product_type" | "product_tags" | "discount_rules"> & {
   variants: ProductVariant[]
-  products?: ProductPreviewType[]
 }
 
-export interface ProductPreviewType {
-  id: string
-  title: string
-  handle: string
-  thumbnail: string
-  price: number
-  collection_id?: string
-  products?: ProductPreviewType[]
+export type ProductVariant = Omit<ProductVariantDTO, "prices" | "options"> & {
+  prices: MoneyAmountDTO[]
 }
 
-export interface ProductListType {
+export type ProductPreviewType = Omit<
+  ProductDTO,
+  "variants" | "options" | "images" | "collection" | "product_type" | "product_tags" | "discount_rules" | "description"
+>
+
+export type ProductListType = {
   products: ProductPreviewType[]
   count: number
+  facets: any[]
 }
 
-export interface ProductVariant {
-  id: string
-  title: string
-  price: number
+export type ProductType = Omit<ProductDTO, "variants" | "options" | "images" | "collection" | "product_type" | "product_tags" | "discount_rules"> & {
+  variants: ProductVariant[]
+  description: string
 }
