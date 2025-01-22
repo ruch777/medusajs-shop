@@ -1,48 +1,59 @@
-import { sdk } from "@lib/config"
+import { medusaClient } from "@lib/config"
 import medusaError from "@lib/util/medusa-error"
 import { cache } from "react"
-import { HttpTypes } from "@medusajs/types"
 
-export const listRegions = cache(async function () {
-  return sdk.store.region
-    .list({}, { next: { tags: ["regions"] } })
-    .then(({ regions }) => regions)
-    .catch(medusaError)
-})
+interface Region {
+  id: string
+  name: string
+  countries: Country[]
+  currency_code: string
+  tax_rate: number
+}
 
-export const retrieveRegion = cache(async function (id: string) {
-  return sdk.store.region
-    .retrieve(id, {}, { next: { tags: ["regions"] } })
-    .then(({ region }) => region)
-    .catch(medusaError)
-})
+interface Country {
+  iso_2: string
+  iso_3: string
+  num_code: string
+  name: string
+  display_name: string
+}
 
-const regionMap = new Map<string, HttpTypes.StoreRegion>()
-
-export const getRegion = cache(async function (countryCode: string) {
+export const listRegions = cache(async (): Promise<Region[]> => {
   try {
-    if (regionMap.has(countryCode)) {
-      return regionMap.get(countryCode)
-    }
-
-    const regions = await listRegions()
-
-    if (!regions) {
-      return null
-    }
-
-    regions.forEach((region) => {
-      region.countries?.forEach((c) => {
-        regionMap.set(c?.iso_2 ?? "", region)
-      })
-    })
-
-    const region = countryCode
-      ? regionMap.get(countryCode)
-      : regionMap.get("us")
-
-    return region
-  } catch (e: any) {
-    return null
+    const { regions } = await medusaClient.regions.list()
+    return regions
+  } catch (error) {
+    throw medusaError(error)
   }
+})
+
+export const retrieveRegion = cache(async (id: string): Promise<Region> => {
+  try {
+    const { region } = await medusaClient.regions.retrieve(id)
+    return region
+  } catch (error) {
+    throw medusaError(error)
+  }
+})
+
+export const getAllCountryCodes = cache(async (): Promise<Record<string, string>> => {
+  const regions = await listRegions()
+  return regions.reduce((acc, region) => {
+    region.countries.forEach(country => {
+      acc[country.iso_2.toLowerCase()] = region.id
+    })
+    return acc
+  }, {} as Record<string, string>)
+})
+
+export const getRegionByCountryCode = cache(async (
+  countryCode: string
+): Promise<Region | undefined> => {
+  const regions = await listRegions()
+  const normalizedCode = countryCode.toLowerCase()
+  return regions.find(region => 
+    region.countries.some(country => 
+      country.iso_2.toLowerCase() === normalizedCode
+    )
+  )
 })
