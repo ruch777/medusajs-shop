@@ -1,23 +1,14 @@
 "use client"
 
 import { Text } from "@medusajs/ui"
+import type { StoreProductCategory } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Suspense } from "react"
 
-interface Category {
-  id: string
-  name: string
-  handle: string
-  metadata?: {
-    thumbnail?: string
-    description?: string
-  }
-}
-
 interface CategoryGridProps {
-  categories: Category[]
+  categories: StoreProductCategory[]
 }
 
 const CategoryGridSkeleton = () => {
@@ -58,7 +49,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ categories }) => {
               >
                 {category.metadata?.thumbnail ? (
                   <Image
-                    src={category.metadata.thumbnail}
+                    src={category.metadata.thumbnail as string}
                     alt={`${category.name} category thumbnail`}
                     className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                     width={400}
