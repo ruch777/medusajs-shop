@@ -4,16 +4,7 @@ import { MeiliSearchService } from '@rokmohar/medusa-plugin-meilisearch'
 
 export default async function productDeleteHandler({ event: { data }, container }: SubscriberArgs<{ id: string }>) {
     const productId = data.id
-
-    // Check if MeiliSearch service is available
-    let meiliSearchService: MeiliSearchService
-    try {
-        meiliSearchService = container.resolve('@rokmohar/medusa-plugin-meilisearch')
-    } catch (error) {
-        // MeiliSearch service not available, skip deletion
-        return
-    }
-
+    const meiliSearchService: MeiliSearchService = container.resolve('meilisearch')
     await meiliSearchService.deleteDocument('products', productId)
 }
 

@@ -8,15 +8,7 @@ export default async function productUpsertHandler({ event: { data }, container 
   const productId = data.id;
 
   const productModuleService: IProductModuleService = container.resolve(Modules.PRODUCT);
-  
-  // Check if MeiliSearch service is available
-  let meiliSearchService: MeiliSearchService;
-  try {
-    meiliSearchService = container.resolve('@rokmohar/medusa-plugin-meilisearch');
-  } catch (error) {
-    // MeiliSearch service not available, skip indexing
-    return;
-  }
+  const meiliSearchService: MeiliSearchService = container.resolve('meilisearch');
 
   const product = await productModuleService.retrieveProduct(productId);
   await meiliSearchService.addDocuments('products', [product], SearchUtils.indexTypes.PRODUCTS);

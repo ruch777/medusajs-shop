@@ -142,9 +142,7 @@ const medusaConfig = {
         config: {
           host: MEILISEARCH_HOST,
           apiKey: MEILISEARCH_API_KEY,
-          headers: {
-            'Authorization': `Bearer ${MEILISEARCH_API_KEY}`
-          }
+          clientAgents: ['Medusa', '2.0.0'],
         },
         settings: {
           products: {
@@ -170,6 +168,7 @@ const medusaConfig = {
                 "category_id"
               ],
             },
+            primaryKey: "id"
           },
         },
       }
