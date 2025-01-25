@@ -1,0 +1,38 @@
+{
+  "rules": {
+    "includePatterns": [
+      "src/**/*.{ts,tsx}",
+      "medusa/**/*.{js,ts}",
+      "components/**/*.tsx",
+      "lib/**/*.ts",
+      "pages/api/**/*.ts",
+      "store-config.js"
+    ],
+    "excludePatterns": [
+      "node_modules/**",
+      ".next/**",
+      "out/**",
+      "**/*.d.ts",
+      "**/*.config.js"
+    ],
+    "priorityFiles": [
+      "medusa-config.js",
+      "src/lib/medusa-client.ts",
+      "src/components/cart/AddToCart.tsx",
+      "src/pages/products/[handle].tsx",
+      "src/pages/store/cart.tsx"
+    ],
+    "frameworkHints": {
+      "nextjs": {
+        "appDir": true,
+        "ssr": true,
+        "isr": true
+      },
+      "medusa": {
+        "customEntities": [],
+        "paymentProcessors": ["stripe"],
+        "searchEngine": "meilisearch"
+      }
+    }
+  }
+}

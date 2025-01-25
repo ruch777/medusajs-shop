@@ -13,7 +13,7 @@ interface CollectionGridProps {
 
 const CollectionGridSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
       {[1, 2, 3].map((i) => (
         <div
           key={i}
@@ -33,7 +33,7 @@ const CollectionGrid: React.FC<CollectionGridProps> = ({ collections }) => {
     <div className="py-12 content-container">
       <Text className="mb-8 text-2xl-semi">Shop by Collection</Text>
       <Suspense fallback={<CollectionGridSkeleton />}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
           {collections.map((collection) => (
             <motion.div
               key={collection.id}

@@ -3,6 +3,7 @@ import { Text } from "@medusajs/ui"
 import type { StoreProductListResponse, StoreRegionListResponse } from "@medusajs/types"
 import { motion } from "framer-motion"
 import { Suspense } from "react"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 type PricedProduct = StoreProductListResponse["products"][0]
 type Region = StoreRegionListResponse["regions"][0]
@@ -31,7 +32,7 @@ const ProductPreview = ({ product, region }: ProductPreviewProps) => {
   }
 
   return (
-    <div className="group">
+    <LocalizedClientLink href={`/products/${product.handle}`} className="group">
       <div className="aspect-[9/16] w-full relative bg-gray-100 rounded-lg overflow-hidden">
         {product.thumbnail && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -48,7 +49,7 @@ const ProductPreview = ({ product, region }: ProductPreviewProps) => {
           {region.currency_code.toUpperCase()} {getPrice()}
         </Text>
       </div>
-    </div>
+    </LocalizedClientLink>
   )
 }
 
