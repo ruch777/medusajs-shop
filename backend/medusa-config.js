@@ -38,7 +38,15 @@ const medusaConfig = {
       storeCors: STORE_CORS,
       jwtSecret: JWT_SECRET,
       cookieSecret: COOKIE_SECRET
-    }
+    },
+    store_cors: STORE_CORS,
+    database_url: DATABASE_URL,
+    database_type: "postgres",
+    redis_url: REDIS_URL,
+    jwt_secret: process.env.JWT_SECRET,
+    cookie_secret: process.env.COOKIE_SECRET,
+    admin_cors: ADMIN_CORS,
+    database_extra: { ssl: { rejectUnauthorized: false } },
   },
   admin: {
     backendUrl: BACKEND_URL,
@@ -133,17 +141,37 @@ const medusaConfig = {
       options: {
         config: {
           host: MEILISEARCH_HOST,
-          apiKey: MEILISEARCH_API_KEY
+          apiKey: MEILISEARCH_API_KEY,
+          headers: {
+            'Authorization': `Bearer ${MEILISEARCH_API_KEY}`
+          }
         },
         settings: {
           products: {
             indexSettings: {
-              searchableAttributes: ['title', 'description', 'variant_sku'],
-              displayedAttributes: ['title', 'description', 'variant_sku', 'thumbnail', 'handle']
+              searchableAttributes: [
+                "title",
+                "description",
+                "variant_sku",
+                "collection_title",
+                "category_name"
+              ],
+              displayedAttributes: [
+                "title",
+                "description",
+                "variant_sku",
+                "thumbnail",
+                "handle",
+                "collection_title",
+                "collection_handle",
+                "collection_id",
+                "category_name",
+                "category_handle",
+                "category_id"
+              ],
             },
-            primaryKey: 'id'
-          }
-        }
+          },
+        },
       }
     }] : [])
   ],
