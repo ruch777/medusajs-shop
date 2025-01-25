@@ -27,11 +27,13 @@ type SearchBoxProps = {
     placeholder: string
   }) => React.ReactNode
   placeholder?: string
+  onSubmit?: (event: FormEvent) => void
 } & UseSearchBoxProps
 
 const SearchBoxWrapper = ({
   children,
   placeholder = "Search products...",
+  onSubmit: customOnSubmit,
   ...rest
 }: SearchBoxProps) => {
   const { query, refine } = useSearchBox(rest)
@@ -48,8 +50,10 @@ const SearchBoxWrapper = ({
     setValue(event.currentTarget.value)
   }
 
-  const onSubmit = () => {
-    if (value) {
+  const onSubmit = (event: FormEvent) => {
+    if (customOnSubmit) {
+      customOnSubmit(event)
+    } else if (value) {
       router.push(`/results/${value}`)
     }
   }

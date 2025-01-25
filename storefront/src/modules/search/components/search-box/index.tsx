@@ -6,6 +6,10 @@ import SearchBoxWrapper, {
   ControlledSearchBoxProps,
 } from "../search-box-wrapper"
 
+interface SearchBoxProps {
+  onSearch?: (query: string) => void
+}
+
 const ControlledSearchBox = ({
   inputRef,
   onChange,
@@ -13,7 +17,6 @@ const ControlledSearchBox = ({
   onSubmit,
   placeholder,
   value,
-  ...props
 }: ControlledSearchBoxProps) => {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -22,10 +25,6 @@ const ControlledSearchBox = ({
     if (onSubmit) {
       onSubmit(event)
     }
-
-    if (inputRef.current) {
-      inputRef.current.blur()
-    }
   }
 
   const handleReset = (event: FormEvent) => {
@@ -33,50 +32,57 @@ const ControlledSearchBox = ({
     event.stopPropagation()
 
     onReset(event)
-
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
   }
 
   return (
-    <div {...props} className="w-full">
-      <form action="" noValidate onSubmit={handleSubmit} onReset={handleReset}>
-        <div className="flex items-center justify-between">
-          <input
-            ref={inputRef}
-            data-testid="search-input"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            placeholder={placeholder}
-            spellCheck={false}
-            type="search"
-            value={value}
-            onChange={onChange}
-            className="txt-compact-large h-6 placeholder:text-ui-fg-on-color placeholder:transition-colors focus:outline-none flex-1 bg-transparent "
-          />
-          {value && (
-            <button
-              onClick={handleReset}
-              type="button"
-              className="items-center justify-center text-ui-fg-on-color focus:outline-none gap-x-2 px-2 txt-compact-large flex"
-            >
-              <XMarkMini />
-              Cancel
-            </button>
-          )}
-        </div>
-      </form>
-    </div>
+    <form
+      action=""
+      noValidate
+      onSubmit={handleSubmit}
+      onReset={handleReset}
+      className="w-full"
+    >
+      <div className="flex items-center justify-between w-full">
+        <input
+          ref={inputRef}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          placeholder={placeholder}
+          spellCheck={false}
+          type="search"
+          value={value}
+          onChange={onChange}
+          className="text-base-regular w-full bg-transparent focus:outline-none placeholder:text-ui-fg-on-color"
+          data-testid="search-input"
+        />
+        {value && (
+          <button
+            onClick={handleReset}
+            type="button"
+            className="h-5 w-5 flex items-center justify-center"
+          >
+            <XMarkMini />
+          </button>
+        )}
+      </div>
+    </form>
   )
 }
 
-const SearchBox = () => {
+const SearchBox = ({ onSearch }: SearchBoxProps) => {
   const router = useRouter()
 
   return (
-    <SearchBoxWrapper>
+    <SearchBoxWrapper
+      onSubmit={(e) => {
+        const target = e.target as HTMLFormElement
+        const input = target.querySelector('input[type="search"]') as HTMLInputElement
+        if (input?.value && onSearch) {
+          onSearch(input.value)
+        }
+      }}
+    >
       {(props) => {
         return (
           <>
