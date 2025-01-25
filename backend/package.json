@@ -37,7 +37,6 @@
     "@rokmohar/medusa-plugin-meilisearch": "^0.1.6",
     "awilix": "^8.0.1",
     "express": "^4.21.2",
-    "medusa-plugin-meilisearch": "^2.0.11",
     "medusajs-launch-utils": "^0.0.10",
     "minio": "^8.0.3",
     "pg": "^8.13.1",

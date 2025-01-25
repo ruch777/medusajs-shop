@@ -1,0 +1,5 @@
+{
+	"dependencies": {
+		"@rokmohar/medusa-plugin-meilisearch": "^0.2.1"
+	}
+}
