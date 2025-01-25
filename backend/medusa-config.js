@@ -142,7 +142,9 @@ const medusaConfig = {
         config: {
           host: MEILISEARCH_HOST,
           apiKey: MEILISEARCH_API_KEY,
-          clientAgents: ['Medusa', '2.0.0'],
+          headers: {
+            'Authorization': `Bearer ${MEILISEARCH_API_KEY}`
+          }
         },
         settings: {
           products: {
@@ -150,27 +152,20 @@ const medusaConfig = {
               searchableAttributes: [
                 "title",
                 "description",
-                "variant_sku",
-                "collection_title",
-                "category_name"
+                "variant_sku"
               ],
               displayedAttributes: [
+                "id",
                 "title",
                 "description",
                 "variant_sku",
                 "thumbnail",
-                "handle",
-                "collection_title",
-                "collection_handle",
-                "collection_id",
-                "category_name",
-                "category_handle",
-                "category_id"
-              ],
+                "handle"
+              ]
             },
             primaryKey: "id"
-          },
-        },
+          }
+        }
       }
     }] : [])
   ],
