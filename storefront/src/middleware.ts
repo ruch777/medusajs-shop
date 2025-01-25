@@ -25,9 +25,8 @@ async function getRegionMap() {
       },
       cache: 'no-store'
     }).then(res => res.json())
-
     if (!regions?.length) {
-      return NextResponse.redirect(new URL("/no-regions-found", request.url))
+      return NextResponse.redirect(new URL("/no-regions-found", request.nextUrl.href))
     }
 
     // Create a map of country codes to regions.
@@ -93,9 +92,9 @@ export async function middleware(request: NextRequest) {
   const cartIdCookie = request.cookies.get("_medusa_cart_id")
 
   const regionMap = await getRegionMap()
-
-  const countryCode = regionMap && (await getCountryCode(request, regionMap))
-
+  
+  const countryCode = regionMap instanceof Map ? await getCountryCode(request, regionMap) : undefined
+  
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
 
