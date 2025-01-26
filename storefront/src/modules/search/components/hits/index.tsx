@@ -1,35 +1,30 @@
+"use client"
+
 import { clx } from "@medusajs/ui"
 import React from "react"
-import {
-  UseHitsProps,
-  useHits,
-  useSearchBox,
-} from "react-instantsearch-hooks-web"
-
+import { useHits, useSearchBox } from "react-instantsearch-hooks-web"
 import { ProductHit } from "../hit"
 import ShowAll from "../show-all"
 
-type HitsProps<THit> = React.ComponentProps<"div"> &
-  UseHitsProps & {
-    hitComponent: (props: { hit: THit }) => JSX.Element
-    category?: "all" | "products" | "collections" | "categories"
-  }
+type HitsProps = React.ComponentProps<"div"> & {
+  hitComponent: (props: { hit: ProductHit }) => JSX.Element
+  category?: "all" | "products" | "collections" | "categories"
+}
 
 const Hits = ({
   hitComponent: Hit,
   className,
   category = "all",
-  ...props
-}: HitsProps<ProductHit>) => {
+}: HitsProps) => {
   const { query } = useSearchBox()
-  const { hits } = useHits(props)
+  const { hits } = useHits<ProductHit>()
 
   const filteredHits = React.useMemo(() => {
     if (category === "all") return hits
     return hits.filter(hit => {
       switch (category) {
         case "products":
-          return !hit.collection_id
+          return !hit.collection_id && !hit.category_id
         case "collections":
           return hit.collection_id
         case "categories":
@@ -51,27 +46,26 @@ const Hits = ({
         }
       )}
     >
-      <div
-        className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4"
-        data-testid="search-results"
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         {filteredHits.slice(0, 6).map((hit, index) => (
           <li
-            key={index}
+            key={hit.id}
             className={clx("list-none", {
               "hidden sm:block": index > 2,
             })}
           >
-            <Hit hit={hit as unknown as ProductHit} />
+            <Hit hit={hit} />
           </li>
         ))}
       </div>
       {filteredHits.length === 0 && query && (
         <div className="flex items-center justify-center py-4">
-          <span className="text-ui-fg-subtle">No results found in {category}</span>
+          <span className="text-ui-fg-subtle">
+            No results found in {category}
+          </span>
         </div>
       )}
-      <ShowAll />
+      {filteredHits.length > 0 && <ShowAll />}
     </div>
   )
 }
