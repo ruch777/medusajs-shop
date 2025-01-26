@@ -1,6 +1,6 @@
 import { loadEnv } from '@medusajs/framework/utils'
 
-import { assertValue } from 'utils/assert-value'
+import { assertValue } from '../utils/assert-value'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
@@ -12,7 +12,7 @@ export const IS_DEV = process.env.NODE_ENV === 'development'
 /**
  * Public URL for the backend
  */
-export const BACKEND_URL = process.env.BACKEND_PUBLIC_URL ?? process.env.RAILWAY_PUBLIC_DOMAIN_VALUE ?? 'http://localhost:9000'
+export const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:9000'
 
 /**
  * Database URL for Postgres instance used by the backend
@@ -30,26 +30,17 @@ export const REDIS_URL = process.env.REDIS_URL;
 /**
  * Admin CORS origins
  */
-export const ADMIN_CORS = assertValue(
-  process.env.ADMIN_CORS,
-  'Environment variable for ADMIN_CORS is not set',
-)
+export const ADMIN_CORS = process.env.ADMIN_CORS;
 
 /**
  * Auth CORS origins
  */
-export const AUTH_CORS = assertValue(
-  process.env.AUTH_CORS,
-  'Environment variable for AUTH_CORS is not set',
-)
+export const AUTH_CORS = process.env.AUTH_CORS;
 
 /**
  * Store/frontend CORS origins
  */
-export const STORE_CORS = assertValue(
-  process.env.STORE_CORS,
-  'Environment variable for STORE_CORS is not set',
-)
+export const STORE_CORS = process.env.STORE_CORS;
 
 /**
  * JWT Secret used for signing JWT tokens
@@ -79,7 +70,7 @@ export const MINIO_BUCKET = process.env.MINIO_BUCKET; // Optional, if not set bu
  * (optional) Resend API Key and from Email - do not set if using SendGrid
  */
 export const RESEND_API_KEY = process.env.RESEND_API_KEY;
-export const RESEND_FROM_EMAIL = process.env.RESEND_FROM;
+export const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL;
 
 /**
  * (optionl) SendGrid API Key and from Email - do not set if using Resend
@@ -102,10 +93,9 @@ export const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY;
 /**
  * Worker mode
  */
-export const WORKER_MODE =
-  (process.env.MEDUSA_WORKER_MODE as 'worker' | 'server' | 'shared' | undefined) ?? 'shared'
+export const WORKER_MODE = process.env.WORKER_MODE === 'true';
 
 /**
  * Disable Admin
  */
-export const SHOULD_DISABLE_ADMIN = process.env.MEDUSA_DISABLE_ADMIN === 'true'
+export const SHOULD_DISABLE_ADMIN = process.env.SHOULD_DISABLE_ADMIN === 'true'

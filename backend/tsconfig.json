@@ -4,7 +4,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "module": "node16",
-    "moduleResolution": "node16",
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
@@ -15,7 +15,7 @@
     "rootDir": "./",
     "baseUrl": ".",
     "paths": {
-      "*": ["./src/*"]
+      "@/*": ["./src/*"]
     },
     "jsx": "react-jsx",
     "forceConsistentCasingInFileNames": true,
