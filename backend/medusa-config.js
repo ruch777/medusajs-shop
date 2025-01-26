@@ -141,11 +141,7 @@ const medusaConfig = {
       options: {
         config: {
           host: MEILISEARCH_HOST,
-          apiKey: MEILISEARCH_API_KEY,
-          clientAgents: ['Medusa', '2.0.0'],
-          headers: {
-            'Authorization': `Bearer ${MEILISEARCH_API_KEY}`
-          }
+          apiKey: MEILISEARCH_API_KEY
         },
         settings: {
           products: {
@@ -153,7 +149,10 @@ const medusaConfig = {
               searchableAttributes: [
                 "title",
                 "description",
-                "variant_sku"
+                "variant_sku",
+                "collection_title",
+                "category_names",
+                "tags"
               ],
               displayedAttributes: [
                 "id",
@@ -161,10 +160,40 @@ const medusaConfig = {
                 "description",
                 "variant_sku",
                 "thumbnail",
-                "handle"
+                "handle",
+                "collection_title",
+                "collection_handle",
+                "category_names",
+                "price",
+                "tags"
+              ],
+              filterableAttributes: [
+                "category_names",
+                "collection_title",
+                "tags"
+              ],
+              sortableAttributes: [
+                "created_at",
+                "updated_at",
+                "price"
               ]
             },
-            primaryKey: "id"
+            primaryKey: "id",
+            transformer: (product) => ({
+              id: product.id,
+              title: product.title,
+              description: product.description,
+              handle: product.handle,
+              thumbnail: product.thumbnail,
+              variant_sku: product.variants?.map(v => v.sku).filter(Boolean),
+              collection_title: product.collection?.title,
+              collection_handle: product.collection?.handle,
+              category_names: product.categories?.map(c => c.name) || [],
+              tags: product.tags?.map(t => t.value) || [],
+              price: product.variants?.[0]?.prices?.[0]?.amount,
+              created_at: product.created_at,
+              updated_at: product.updated_at
+            })
           }
         }
       }

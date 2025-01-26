@@ -1,53 +1,56 @@
 import { MeiliSearch, SearchResponse } from 'meilisearch'
+import { InstantMeiliSearchInstance } from '@meilisearch/instant-meilisearch'
 
-const searchEndpoint = process.env.NEXT_PUBLIC_SEARCH_ENDPOINT || "http://localhost:7700"
-const searchApiKey = process.env.NEXT_PUBLIC_SEARCH_API_KEY
-export const SEARCH_INDEX_NAME = process.env.NEXT_PUBLIC_INDEX_NAME || "products"
-
-export const searchClient = new MeiliSearch({
-  host: searchEndpoint,
-  apiKey: searchApiKey,
-})
+interface SearchRequest {
+  indexName: string
+  query?: string
+  params?: {
+    filter?: string[]
+    limit?: number
+    page?: number
+  }
+}
 
 interface SearchResult {
   hits: Record<string, any>[]
-  estimatedTotalHits?: number
-  processingTimeMs: number
+  nbHits: number
+  nbPages: number
+  page: number
+  processingTimeMS: number
   query: string
 }
 
-// Create a wrapper for compatibility with InstantSearch
-const searchWrapper = {
-  search(requests: any[]) {
-    const searchPromises = requests.map((request) => {
-      const { indexName, query, params } = request
-      
-      // Transform params to MeiliSearch format
-      const searchParams: any = {
-        limit: params?.hitsPerPage,
-        offset: params?.page ? params.page * (params?.hitsPerPage || 20) : 0,
-      }
+const searchEndpoint = process.env.NEXT_PUBLIC_SEARCH_ENDPOINT || 'http://localhost:7700'
+const apiKey = process.env.NEXT_PUBLIC_SEARCH_API_KEY || ''
 
-      // Add filter if present
-      if (params?.filters) {
-        searchParams.filter = params.filters
-      }
+const client = new MeiliSearch({
+  host: searchEndpoint,
+  apiKey: apiKey
+})
 
-      return searchClient
-        .index(indexName)
-        .search(query || "", searchParams)
-        .then((res: SearchResult) => ({
-          hits: res.hits,
-          nbHits: res.estimatedTotalHits || 0,
-          nbPages: Math.ceil((res.estimatedTotalHits || 0) / (params?.hitsPerPage || 20)),
-          page: params?.page || 0,
-          processingTimeMS: res.processingTimeMs,
-          query: res.query || "",
-        }))
-    })
+export const searchClient: InstantMeiliSearchInstance = {
+  search: async (requests: SearchRequest[]) => {
+    const results = await Promise.all(
+      requests.map(async (request) => {
+        const res = await client.index(request.indexName).search(request.query || "", {
+          filter: request.params?.filter,
+          limit: request.params?.limit || 20,
+          offset: (request.params?.page || 0) * (request.params?.limit || 20)
+        })
 
-    return Promise.all(searchPromises).then((results) => ({ results }))
-  },
+        return {
+          hits: res.hits || [],
+          nbHits: (res as any).estimatedTotalHits || 0,
+          nbPages: Math.ceil(((res as any).estimatedTotalHits || 0) / (request.params?.limit || 20)),
+          page: (request.params?.page || 0),
+          processingTimeMS: res.processingTimeMs || 0,
+          query: request.query || "",
+        } as SearchResult
+      })
+    )
+
+    return { results }
+  }
 }
 
-export default searchWrapper
+export const SEARCH_INDEX_NAME = process.env.NEXT_PUBLIC_INDEX_NAME || "products"

@@ -13,9 +13,10 @@ import SearchBox from "@modules/search/components/search-box"
 
 type SearchCategory = "all" | "products" | "collections" | "categories"
 
-export default function SearchModal() {
+const SearchModal = () => {
   const router = useRouter()
   const searchRef = useRef(null)
+  const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<SearchCategory>("all")
   const [recentSearches, setRecentSearches] = useState<string[]>([])
 
@@ -74,6 +75,12 @@ export default function SearchModal() {
       window.removeEventListener("keydown", handleEsc)
     }
   }, [])
+
+  const searchParams = {
+    query: searchTerm,
+    filter: selectedCategory !== "all" ? [`category_names = "${selectedCategory}"`] : undefined,
+    limit: 10
+  }
 
   return (
     <div className="relative z-50">
@@ -146,3 +153,5 @@ export default function SearchModal() {
     </div>
   )
 }
+
+export default SearchModal
